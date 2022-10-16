@@ -1,0 +1,322 @@
+include gro
+set ("dt", 0.1);
+set ("population_max", 2000000);
+set ("signals",1.0);
+set ("signals_draw", 1.0);
+grid("continuous", "gro_original", 10, 10, 8);
+
+t := 0;
+t1 := 0;
+n := 0;
+
+s1 := s_signal([kdiff := 0.1, kdeg := 0.05]);
+s2 := s_signal([kdiff := 0.1, kdeg := 0.05]);
+s3 := s_signal([kdiff := 0.1, kdeg := 0.05]);
+
+arabinose := s_signal([kdiff := 1.0, kdeg := 0.0001]);
+
+
+
+ 
+
+//BAND A -> LUX
+ genes([ name := "LacMA",
+	proteins := {"lacMA"},
+	promoter := [function := "YES",	transcription_factors := {"luxHigh"}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+ genes([ name := "CIA",
+	proteins := {"cIA"},
+	promoter := [function := "YES",	transcription_factors := {"luxLow"}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+
+ genes([ name := "LacA",
+	proteins := {"lacA"},
+	promoter := [function := "NOT",	transcription_factors := {"cIA"}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+ genes([ name := "BandA",
+	proteins := {"bandA"},
+	promoter := [function := "AND",	transcription_factors := {"-lacMA", "-lacA"}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+
+//BAND B -> LAS
+ genes([ name := "LacMB",
+	proteins := {"lacMB"},
+	promoter := [function := "YES",	transcription_factors := {"lasHigh"}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+ genes([ name := "CIB",
+	proteins := {"cIB"},
+	promoter := [function := "YES",	transcription_factors := {"lasLow"}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+ genes([ name := "LacB",
+	proteins := {"lacB"},
+	promoter := [function := "NOT",	transcription_factors := {"cIB"}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+ genes([ name := "BandB",
+	proteins := {"bandB"},
+	promoter := [function := "AND",	transcription_factors := {"-lacMB", "-lacB"}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+
+//BAND C -> rpa
+ genes([ name := "LacMC",
+	proteins := {"lacMC"},
+	promoter := [function := "YES",	transcription_factors := {"rpaHigh"}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+ genes([ name := "CIC",
+	proteins := {"cIC"},
+	promoter := [function := "YES",	transcription_factors := {"rpaLow"}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+ genes([ name := "LacC",
+	proteins := {"lacC"},
+	promoter := [function := "NOT",	transcription_factors := {"cIC"}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+ genes([ name := "BandC",
+	proteins := {"bandC"},
+	promoter := [function := "AND",	transcription_factors := {"-lacMC", "-lacC"}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+
+
+
+//Emisor inicial de luxI
+  genes([ name := "EmiterA",
+	proteins := {"emisorA","luxI"},
+	promoter := [function := "YES",	transcription_factors := {"arac"}],
+	prot_act_times := [times := {4.0,4.0}, variabilities := {0.0,0.0}],
+	prot_deg_times := [times := {0.1,0.1}, variabilities := {0.0,0.0}]
+    ]);
+
+  genes([ name := "EmiterB",
+	proteins := {"emisorB" , "lasI"},
+	promoter := [function := "YES",	transcription_factors := {"arac"}],
+	prot_act_times := [times := {4.0,4.0}, variabilities := {0.0,0.0}],
+	prot_deg_times := [times := {0.1,0.1}, variabilities := {0.0,0.0}]
+    ]);
+
+  genes([ name := "EmiterC",
+	proteins := {"emisorC","rpaI"},
+	promoter := [function := "YES",	transcription_factors := {"arac"}],
+	prot_act_times := [times := {4.0,4.0}, variabilities := {0.0,0.0}],
+	prot_deg_times := [times := {0.1,0.1}, variabilities := {0.0,0.0}]
+    ]);
+
+
+
+ genes([ name := "OperonGreen",
+	proteins := {"takeGreen", "lasI","rpaI"},
+	promoter := [function := "AND",	transcription_factors := { "bandC", "bandB","-bandA"}],
+	prot_act_times := [times := {1.0,1.0,1.0}, variabilities := {0.0, 0.0, 0.0}],
+	prot_deg_times := [times := {0.1,0.1,0.1}, variabilities := {0.0, 0.0, 0.0}]
+    ]);
+
+ genes([ name := "OperonRed",
+	proteins := {"takeRed", "rpaI","luxI"},
+	promoter := [function := "AND",	transcription_factors := { "bandC", "bandA", "-bandB"}],
+	prot_act_times := [times := {1.0,1.0,1.0}, variabilities := {0.0, 0.0, 0.0}],
+	prot_deg_times := [times := {0.1,0.1,0.1}, variabilities := {0.0, 0.0, 0.0}]
+    ]);
+
+ genes([ name := "OperonYellow",
+	proteins := {"takeYellow", "luxI","lasI"},
+	promoter := [function := "AND",	transcription_factors := { "bandA", "bandB", "-bandC"}],
+	prot_act_times := [times := {1.0,1.0,1.0}, variabilities := {0.0, 0.0, 0.0}],
+	prot_deg_times := [times := {0.1,0.1,0.1}, variabilities := {0.0, 0.0, 0.0}]
+    ]);
+
+
+
+// COLORS
+  genes([ name := "REPA",
+	proteins := {"repA"},
+	promoter := [function := "YES",	transcription_factors := {}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+ genes([ name := "REPB",
+	proteins := {"repB"},
+	promoter := [function := "YES",	transcription_factors := {}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]);
+
+ genes([ name := "REPC",
+	proteins := {"repC"},
+	promoter := [function := "YES",	transcription_factors := {}],
+	prot_act_times := [times := {1.0}, variabilities := {0.0}],
+	prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+    ]); 
+
+
+  genes([ name := "GFP",
+	proteins := {"gfp", "luxI"},
+	promoter := [function := "NOT",	transcription_factors := {"repA"}],
+	prot_act_times := [times := {3.0,3.0}, variabilities := {0.0, 0.0}],
+	prot_deg_times := [times := {0.1,0.1}, variabilities := {0.0, 0.0}]
+    ]);
+
+ genes([ name := "YFP",
+	proteins := {"yfp", "lasI"},
+	promoter := [function := "NOT",	transcription_factors := {"repB"}],
+	prot_act_times := [times := {3.0,3.0}, variabilities := {0.0, 0.0}],
+	prot_deg_times := [times := {0.1,0.1}, variabilities := {0.0, 0.0}]
+    ]);
+
+ genes([ name := "RFP",
+	proteins := {"rfp", "rpaI"},
+	promoter := [function := "NOT",	transcription_factors := {"repC"}],
+	prot_act_times := [times := {3.0,3.0}, variabilities := {0.0, 0.0}],
+	prot_deg_times := [times := {0.1,0.1}, variabilities := {0.0, 0.0}]
+    ]); 
+
+
+
+
+
+plasmids_genes ([ pA := {  "LacA", "CIA", "LacMA","BandA"  },  
+                pB := {  "LacB", "CIB", "LacMB","BandB"  }, 
+                pC := {  "LacC", "CIC", "LacMC","BandC"  }, 
+                pTake:={"OperonRed", "OperonGreen", "OperonYellow"},
+                pGFP:={"GFP"},
+                pYFP:={"YFP"},
+                pRFP:={"RFP"}, 
+                pRep:={"REPA","REPB" ,"REPC"},
+                pEmiterA := {"EmiterA"},
+                pEmiterB := {"EmiterB"},
+                pEmiterC := {"EmiterC"}
+                ]);
+
+
+
+ //action({"luxLow"},"d_paint",{"1","0","0","0"});
+ //action({"-luxLow"},"d_paint",{"-1","0","0","0"});
+
+ //action({"rpaLow"},"d_paint",{"0","1","0","0"});
+ //action({"rpaHigh"},"d_paint",{"0","-1","0","0"});
+
+ //action({"lasLow"},"d_paint",{"0","0","0","1"});
+ //action({"-lasLow"},"d_paint",{"0","0","0","-1"});
+
+action({"takeGreen"},"d_paint",{"0","1","0","0"});
+action({"-takeGreen"},"d_paint",{"0","-1","0","0"});
+
+action({"takeRed"},"d_paint",{"1","0","0","0"});
+action({"-takeRed"},"d_paint",{"-1","0","0","0"});
+
+action({"takeYellow"},"d_paint",{"0","0","0","1"});
+action({"-takeYellow"},"d_paint",{"0","0","0","-1"});
+
+//PINTADO
+
+//action({"gfp"},"d_paint",{"1","0","0","0"});
+//action({"-gfp"},"d_paint",{"-1","0","0","0"});
+
+//action({"rfp"},"d_paint",{"0","1","0","0"});
+//action({"-rfp"},"d_paint",{"0","-1","0","0"});
+
+//action({"yfp"},"d_paint",{"0","0","0","1"});
+//action({"-yfp"},"d_paint",{"0","0","0","-1"});
+
+//Parámetros
+
+action({},"set_growth_rate",{"0.0000"});
+
+action({"luxI"},"s_emit_signal",{tostring(s1),"0.001", "exact"});
+action({"lasI"},"s_emit_signal",{tostring(s2),"0.001", "exact"});
+action({"rpaI"},"s_emit_signal",{tostring(s3),"0.001", "exact"});
+
+action({},"s_get_QS",{tostring(s1),">","0.1","luxHigh"}); 
+action({},"s_get_QS",{tostring(s1),">","0.01","luxLow"});
+
+action({},"s_get_QS",{tostring(s2),">","0.1","lasHigh"}); 
+action({},"s_get_QS",{tostring(s2),">","0.01","lasLow"});
+
+action({},"s_get_QS",{tostring(s3),">","0.1","rpaHigh"}); 
+action({},"s_get_QS",{tostring(s3),">","0.01","rpaLow"});
+
+action({},"s_get_QS",{tostring(arabinose),">","0.5","arac"});
+
+//Loss plasmids
+
+/* action({"takeRed"}, "lose_plasmid", {"pYFP"} );
+action({"takeRed"}, "lose_plasmid", {"pGFP"} );
+action({"takeRed"}, "lose_plasmid", {"pTake"} );
+action({"takeRed"}, "lose_plasmid", {"pEmiterA"} );
+
+action({"takeGreen"}, "lose_plasmid", {"pYFP"} );
+action({"takeGreen"}, "lose_plasmid", {"pRFP"} );
+action({"takeGreen"}, "lose_plasmid", {"pTake"} );
+action({"takeGreen"}, "lose_plasmid", {"pEmiterA"} );
+
+action({"takeYellow"}, "lose_plasmid", {"pGFP"} );
+action({"takeYellow"}, "lose_plasmid", {"pRFP"} );
+action({"takeYellow"}, "lose_plasmid", {"pTake"} );
+action({"takeYellow"}, "lose_plasmid", {"pEmiterA"} ); */
+
+route := "/Users/tin/Google Drive/PaperGraphColoring/IWBDA2022/Poster/sourceCodes/V2/";
+
+//Programs
+program p() :=
+{
+	skip();
+};
+program main() :=  {
+
+	t1 > 5 : 
+	{ 
+        //Con esto se graba la imagen cada 5 minutos simulados
+    	snapshot ( route <> "pic" <> tostring(n) <> ".tif" ),
+    	n := n + 1,
+    	t1 := 0
+  	}
+
+	true: {
+		t := t+dt;
+		t1 := t1+dt;
+	}
+
+	t < 10: {
+		s_set_signal(arabinose, 15000, 0.0, 0.0);
+	}
+
+
+c_ecolis(5000, 0, 0, 80, {"pA","pB","pC","pTake", "pGFP", "pYFP", "pGFP","pRep"}, program p());
+c_ecolis(100, 0, 0, 80, {"pEmiterA","pA","pB","pC","pTake", "pGFP", "pYFP", "pGFP","pRep"}, program p());
+c_ecolis(100, 0, 0, 80, {"pEmiterB","pA","pB","pC","pTake", "pGFP", "pYFP", "pGFP","pRep"}, program p());
+c_ecolis(100, 0, 0, 80, {"pEmiterC","pA","pB","pC","pTake", "pGFP", "pYFP", "pGFP","pRep"}, program p());
+
+};
